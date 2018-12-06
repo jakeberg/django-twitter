@@ -15,7 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.urls import path
+from djangotwitter import views
+from djangotwitter.models import Author, Post, Following
+admin.site.register(Author)
+admin.site.register(Post)
+admin.site.register(Following)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    path('', views.homepage_view, name='homepage'),
+    path('error/', views.error_view, name='error'),
+    path('login/', views.login_view),
+    path('signup/', views.signup_view),
+    path('logout/', views.logout_view),
+    path('post/', views.post_view, ),
+    path('<str:username>/', views.user_page_view),
 ]

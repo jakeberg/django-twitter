@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <title></title>
+</head>
+
+<body>
+
+    <div class="container">
+        <header style=" display: flex; flex-direction: row; justify-content: space-between; padding: 20px 0 20px 0;">
+            <a href="/" class="btn btn-primary">Home</a>
+            <div>
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/logout" class="btn btn-primary">Logout</a>
+                <a href="/signup" class="btn btn-primary">Signup</a>
+            </div>
+
+        </header>
+        <header class="jumbotron">
+            <h1>Twitter</h1>
+        </header>
+        <section style=" display: flex; flex-direction: row; justify-content: center; padding: 20px 0 20px 0;">
+            <a href="/post" class="btn btn-primary">Tweet</a>
+        </section>
+        <div class="row">
+            <div class="col">
+                <h3>{{ user.name }}</h3>
+                <div class="row">
+                    <h5>@{{ user.name }}</h5>
+                </div>
+                <form name="create_station" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="username" value="{{ user.name }}" />
+                    <input type="submit" value="Follow" />
+                </form>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <h4 class="col"><a href="/">Tweets</a></h4>
+                    <h4 class="col"><a href="/">Following</a></h4>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for item in posts %}
+                            <li style="list-style-type: none">
+                                <div class="card" style="width: 100%;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a href="/">{{ item.author }}</a>
+                                            <span style="font-size: .8rem">@{{ item.author }} - {{ item.date }}</span>
+                                        </h5>
+                                        <p class="card-text">{{ item.body }}</p>
+                                        <a href="#" class="card-link">Show this thread</a>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        This is some text within a card body.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
