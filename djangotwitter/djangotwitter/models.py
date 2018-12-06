@@ -6,6 +6,7 @@ from datetime import datetime
 class Author(models.Model):
     name = models.CharField(max_length=50)
     bio = models.CharField(max_length=50)
+    following = models.ManyToManyField("self", symmetrical=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
@@ -22,11 +23,3 @@ class Post(models.Model):
     def __str__(self):
         return self.body
 
-
-class Following(models.Model):
-    name = models.CharField(max_length=50)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-
-
-    def __str__(self):
-        return self.name

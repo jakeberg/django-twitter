@@ -34,16 +34,18 @@
                 <div class="row">
                     <h5>@{{ user.name }}</h5>
                 </div>
+                {% if already_following %}
+
+                {% endif %}
                 <form name="create_station" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="username" value="{{ user.name }}" />
-                    <input type="submit" value="Follow" />
+                    <input class="btn btn-secondary" type="submit" value="Follow" />
                 </form>
             </div>
             <div class="col-6">
                 <div class="row">
-                    <h4 class="col"><a href="/">Tweets</a></h4>
-                    <h4 class="col"><a href="/">Following</a></h4>
+                    <h4 class="col">Tweets</h4>
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -69,7 +71,12 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        This is some text within a card body.
+                        Following
+                        <br>
+                        {% for item in following %}
+                        <a href="/{{ item }}">{{ item }}</a>
+                        <br>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

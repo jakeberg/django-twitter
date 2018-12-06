@@ -1,6 +1,6 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from djangotwitter.models import Author, Post, Following
+from djangotwitter.models import Author, Post
 from djangotwitter.forms import LoginForm, SignupForm, PostForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -60,7 +60,7 @@ def homepage_view(request):
     current_user = Author.objects.filter(user=request.user).first()
     content = {
         "posts": Post.objects.filter(author__id=current_user.id).order_by('date').reverse(),
-        "followers": Following.objects.filter(author__id=current_user.id)
+        "following": current_user.following.all()
     }
 
     return render(request, html, content)
@@ -94,13 +94,15 @@ def user_page_view(request, username):
 
     content = {
         'user': user,
-        "posts": Post.objects.filter(author__id=user.id).order_by('date').reverse()
+        "posts": Post.objects.filter(author__id=user.id).order_by('date').reverse(),
+        "following": user.following.all()
     }
 
     if request.method == "POST":
-        username = request.POST.get('username')
         current_user = Author.objects.filter(user=request.user).first()
-        Following.objects.create(name=username, author=current_user)
+        username = request.POST.get('username')
+        author = Author.objects.filter(name=username).first()
+        current_user.following.add(author.id)
 
     return render(request, html, content)
 
