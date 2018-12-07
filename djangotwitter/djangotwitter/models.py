@@ -6,7 +6,7 @@ from datetime import datetime
 class Author(models.Model):
     name = models.CharField(max_length=50)
     bio = models.CharField(max_length=50)
-    following = models.ManyToManyField("self", symmetrical=False)
+    following = models.ManyToManyField("self", symmetrical=False, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 

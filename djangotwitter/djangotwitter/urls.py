@@ -28,6 +28,8 @@ urlpatterns = [
     path('login/', views.login_view),
     path('signup/', views.signup_view),
     path('logout/', views.logout_view),
-    path('post/', views.post_view, ),
-    path('<str:username>/', views.user_page_view),
+    path('post/', views.post_view),
+    path('author/<str:username>/', views.user_page_view),
+    path('post/<int:id>/', views.tweet_view),
+    path('delete/<int:id>/', views.delete_tweet_view)
 ]

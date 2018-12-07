@@ -22,30 +22,45 @@
             </div>
 
         </header>
+
         <header class="jumbotron">
             <h1>Twitter</h1>
         </header>
+
         <section style=" display: flex; flex-direction: row; justify-content: center; padding: 20px 0 20px 0;">
             <a href="/post" class="btn btn-primary">Tweet</a>
         </section>
+
         <div class="row">
+
             <div class="col">
                 <h3>{{ user.name }}</h3>
                 <div class="row">
                     <h5>@{{ user.name }}</h5>
                 </div>
-                {% if already_following %}
-
+                {% if not is_self %}
+                    {% if already_following %}
+                    <form name="unfollow" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="rule" value="unfollow" />
+                        <input type="hidden" name="username" value="{{ user.name }}" />
+                        <input class="btn btn-secondary" type="submit" value="Unfollow" />
+                    </form>
+                    {% else %}
+                    <form name="follow" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="rule" value="follow" />
+                        <input type="hidden" name="username" value="{{ user.name }}" />
+                        <input class="btn btn-secondary" type="submit" value="Follow" />
+                    </form>
+                    {% endif %}
                 {% endif %}
-                <form name="create_station" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="username" value="{{ user.name }}" />
-                    <input class="btn btn-secondary" type="submit" value="Follow" />
-                </form>
             </div>
+
             <div class="col-6">
                 <div class="row">
-                    <h4 class="col">Tweets</h4>
+                    <h4 class="col">Tweets:</h4>
+                    <h4 class="col">{{ number_of_posts }}</h4>
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -58,8 +73,11 @@
                                             <a href="/">{{ item.author }}</a>
                                             <span style="font-size: .8rem">@{{ item.author }} - {{ item.date }}</span>
                                         </h5>
-                                        <p class="card-text">{{ item.body }}</p>
+                                        <a href="/post/{{ item.id }}">
+                                            <p class="card-text">{{ item.body }}</p>
+                                        </a>
                                         <a href="#" class="card-link">Show this thread</a>
+                                        <a href="delete/{{ item.id }}" class="card-link">Delete</a>
                                     </div>
                                 </div>
                             </li>
@@ -68,18 +86,20 @@
                     </div>
                 </div>
             </div>
+
             <div class="col">
                 <div class="card">
                     <div class="card-body">
                         Following
                         <br>
                         {% for item in following %}
-                        <a href="/{{ item }}">{{ item }}</a>
+                        <a href="/author/{{ item }}">{{ item }}</a>
                         <br>
                         {% endfor %}
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 

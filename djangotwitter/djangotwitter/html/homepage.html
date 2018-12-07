@@ -34,10 +34,12 @@
                 <div class="row">
                     <h5>@{{ request.user }}</h5>
                 </div>
+                <h6>Following: {{ number_of_following }}</h6>
             </div>
             <div class="col-6">
                 <div class="row">
                     <h4 class="col">Tweets</h4>
+                    <h4 class="col">{{ number_of_posts }}</h4>
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -50,8 +52,9 @@
                                             <a href="/">{{ item.author }}</a>
                                             <span style="font-size: .8rem">@{{ item.author }} - {{ item.date }}</span>
                                         </h5>
-                                        <p class="card-text">{{ item.body }}</p>
+                                        <a href="/post/{{ item.id }}"><p class="card-text">{{ item.body }}</p></a>
                                         <a href="#" class="card-link">Show this thread</a>
+                                        <a href="delete/{{ item.id }}" class="card-link">Delete</a>
                                     </div>
                                 </div>
                             </li>
@@ -65,8 +68,8 @@
                     <div class="card-body">
                         Following
                         <br>
-                        {% for item in following  %}
-                        <a href="/{{ item }}">{{ item }}</a>
+                        {% for author in following  %}
+                        <a href="/author/{{ author }}">{{ author }}</a>
                         <br>
                         {% endfor %}
                     </div>

@@ -49,7 +49,9 @@ def login_view(request):
 
 
 def logout_view(request):
+    
     logout(request)
+
     return HttpResponseRedirect(reverse('homepage'))
 
 
@@ -57,10 +59,14 @@ def logout_view(request):
 def homepage_view(request):
 
     html = "homepage.html"
-    current_user = Author.objects.filter(user=request.user).first()
+    current_author = Author.objects.filter(user=request.user).first()
+    posts = Post.objects.filter(author__id=current_author.id).order_by('date').reverse()
+
     content = {
-        "posts": Post.objects.filter(author__id=current_user.id).order_by('date').reverse(),
-        "following": current_user.following.all()
+        "posts": posts,
+        "following": current_author.following.all(),
+        "number_of_following": len(current_author.following.all()),
+        "number_of_posts": len(posts)
     }
 
     return render(request, html, content)
@@ -90,21 +96,58 @@ def user_page_view(request, username):
 
     html = "user_page.html"
 
-    user = Author.objects.filter(name=username).first()
+    author = Author.objects.filter(name=username).first()
+    posts = Post.objects.filter(author__id=author.id).order_by('date').reverse()
+    following = author.following.all()
+    current_user_follows = Author.objects.filter(user=request.user).first().following.all()
 
     content = {
-        'user': user,
-        "posts": Post.objects.filter(author__id=user.id).order_by('date').reverse(),
-        "following": user.following.all()
+        'user': author,
+        "posts": posts,
+        "following": following,
+        "number_of_following": len(following),
+        "number_of_posts": len(posts),
+        "already_following": True if author in current_user_follows else False,
+        "is_self": True if author.user == request.user else False
     }
 
     if request.method == "POST":
-        current_user = Author.objects.filter(user=request.user).first()
-        username = request.POST.get('username')
-        author = Author.objects.filter(name=username).first()
-        current_user.following.add(author.id)
+        rule = request.POST.get('rule')
+        if rule == "follow":
+            current_author = Author.objects.filter(user=request.user).first()
+            username = request.POST.get('username')
+            author = Author.objects.filter(name=username).first()
+            current_author.following.add(author.id)
+        elif rule == "unfollow":
+            current_author = Author.objects.filter(user=request.user).first()
+            username = request.POST.get('username')
+            author = Author.objects.filter(name=username).first()
+            current_author.following.remove(author.id)
+        return HttpResponseRedirect('/author/' + author.name)
 
     return render(request, html, content)
+
+
+def tweet_view(request, id):
+
+    html = "tweet.html"
+
+    tweet = Post.objects.get(id=id)
+
+    content = {
+        "tweet": tweet
+    }
+
+    return render(request, html, content)
+
+
+def delete_tweet_view(request, id):
+
+    html = "tweet.html"
+
+    Post.objects.filter(id=id).delete()
+
+    return HttpResponseRedirect(reverse('homepage'))
 
 
 def error_view(request):
