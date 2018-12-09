@@ -7,58 +7,6 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 import re
 
-
-def signup_view(request):
-
-    html = "signup.html"
-
-    form = SignupForm(None or request.POST)
-
-    if form.is_valid():
-        data = form.cleaned_data
-        if User.objects.filter(username=data['username']).exists():
-            return HttpResponseRedirect(reverse('error'))
-        else:
-            user = User.objects.create_user(
-                data['username'], data['email'], data['password'])
-            login(request, user)
-            TwitterUser.objects.create(name=user.username, user=user, bio="")
-            return HttpResponseRedirect(reverse('homepage'))
-
-    return render(request, html, {'form': form})
-
-
-def login_view(request):
-
-    html = "login.html"
-
-    form = LoginForm(None or request.POST)
- 
-    if form.is_valid():
-        next = request.POST.get('next')
-        data = form.cleaned_data
-        user = authenticate(
-            username=data['username'], 
-            password=data['password']
-            )
-        
-        if user is not None:
-            login(request, user)  
-        if next:
-            return HttpResponseRedirect(next)
-        else:
-            return HttpResponseRedirect("/")
-
-    return render(request, html, {'form': form})
-
-
-def logout_view(request):
-    
-    logout(request)
-
-    return HttpResponseRedirect(reverse('homepage'))
-
-
 @login_required()
 def homepage_view(request):
 
@@ -75,7 +23,6 @@ def homepage_view(request):
         "number_of_following": len(current_author.following.all()),
         "number_of_posts": len(posts),
         "number_of_notifications": len(notifications),
-        "notifications": notifications
     }
 
     return render(request, html, content)
@@ -131,15 +78,12 @@ def user_page_view(request, username):
 
     if request.method == "POST":
         rule = request.POST.get('rule')
+        current_author = TwitterUser.objects.filter(user=request.user).first()
+        username = request.POST.get('username')
+        author = TwitterUser.objects.filter(name=username).first()
         if rule == "follow":
-            current_author = TwitterUser.objects.filter(user=request.user).first()
-            username = request.POST.get('username')
-            author = TwitterUser.objects.filter(name=username).first()
             current_author.following.add(author.id)
         elif rule == "unfollow":
-            current_author = TwitterUser.objects.filter(user=request.user).first()
-            username = request.POST.get('username')
-            author = TwitterUser.objects.filter(name=username).first()
             current_author.following.remove(author.id)
         return HttpResponseRedirect('/author/' + author.name)
 
@@ -164,6 +108,30 @@ def delete_tweet_view(request, id):
     html = "tweet.html"
 
     Tweet.objects.filter(id=id).delete()
+
+    return HttpResponseRedirect(reverse('homepage'))
+
+
+def notification_view(request):
+
+    html = "notifications.html"
+
+    current_author = TwitterUser.objects.filter(user=request.user).first()
+    notifications = Notification.objects.filter(author__id=current_author.id)
+    tweet_ids = [i.tweet_id for i in notifications]
+    tweets = Tweet.objects.filter(id__in=list(tweet_ids))
+
+
+    content = {
+        "tweets": tweets
+    }
+
+    return render(request, html, content)
+
+def delete_notifications_view(request):
+
+    current_author = TwitterUser.objects.filter(user=request.user).first()
+    notifications = Notification.objects.filter(author__id=current_author.id).delete()
 
     return HttpResponseRedirect(reverse('homepage'))
 
