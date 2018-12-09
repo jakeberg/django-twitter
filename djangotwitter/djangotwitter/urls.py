@@ -17,9 +17,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 from djangotwitter import views
-from djangotwitter.models import Author, Post
-admin.site.register(Author)
-admin.site.register(Post)
+from djangotwitter.models import TwitterUser, Tweet
+admin.site.register(TwitterUser)
+admin.site.register(Tweet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

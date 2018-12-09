@@ -1,5 +1,5 @@
 from django import forms
-from djangotwitter.models import Author
+from djangotwitter.models import TwitterUser
 from datetime import datetime
 
 
@@ -14,11 +14,11 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput())
 
 
-class PostForm(forms.Form):
+class TweetForm(forms.Form):
     
     def __init__(self, user, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
-        current_user = Author.objects.filter(user=user).first()
+        super(TweetForm, self).__init__(*args, **kwargs)
+        current_user = TwitterUser.objects.filter(user=user).first()
         if current_user:
             self.fields['author'].choices = [(current_user.id, current_user.name)]
             
