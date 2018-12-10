@@ -1,11 +1,9 @@
 from django.shortcuts import render, reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from djangotwitter.models import TwitterUser, Tweet, Notification
-from djangotwitter.forms import LoginForm, SignupForm, TweetForm
+from django.http import HttpResponseRedirect
+from djangotwitter.models import TwitterUser
+from djangotwitter.forms import LoginForm, SignupForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
-import re
 
 
 def login_view(request):
@@ -13,17 +11,17 @@ def login_view(request):
     html = "login.html"
 
     form = LoginForm(None or request.POST)
- 
+
     if form.is_valid():
         next = request.POST.get('next')
         data = form.cleaned_data
         user = authenticate(
-            username=data['username'],  
+            username=data['username'],
             password=data['password']
             )
-        
+
         if user is not None:
-            login(request, user)  
+            login(request, user)
         if next:
             return HttpResponseRedirect(next)
         else:
@@ -51,9 +49,9 @@ def signup_view(request):
 
     return render(request, html, {'form': form})
 
+
 def logout_view(request):
-    
+
     logout(request)
 
     return HttpResponseRedirect(reverse('homepage'))
-

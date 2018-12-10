@@ -5,9 +5,11 @@ name = "pypi"
 
 [dev-packages]
 "pep8" = "*"
+"flake8" = "*"
 
 [packages]
 django = "*"
+"pep8" = "*"
 
 [requires]
 python_version = "3.7"

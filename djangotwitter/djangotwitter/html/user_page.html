@@ -34,23 +34,23 @@
         <div class="row">
 
             <div class="col">
-                <h3>{{ user.name }}</h3>
+                <h3>{{ author.name }}</h3>
                 <div class="row">
-                    <h5>@{{ user.name }}</h5>
+                    <h5>@{{ author.name }}</h5>
                 </div>
                 {% if not is_self %}
                     {% if already_following %}
                     <form name="unfollow" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="rule" value="unfollow" />
-                        <input type="hidden" name="username" value="{{ user.name }}" />
+                        <input type="hidden" name="id" value="{{ author.id }}" />
                         <input class="btn btn-secondary" type="submit" value="Unfollow" />
                     </form>
                     {% else %}
                     <form name="follow" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="rule" value="follow" />
-                        <input type="hidden" name="username" value="{{ user.name }}" />
+                        <input type="hidden" name="id" value="{{ author.id }}" />
                         <input class="btn btn-secondary" type="submit" value="Follow" />
                     </form>
                     {% endif %}
@@ -90,8 +90,8 @@
                     <div class="card-body">
                         Following
                         <br>
-                        {% for item in following %}
-                        <a href="/author/{{ item }}">{{ item }}</a>
+                        {% for author in following %}
+                        <a href="/author/{{ author.id }}">{{ author }}</a>
                         <br>
                         {% endfor %}
                     </div>

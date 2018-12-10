@@ -30,9 +30,9 @@
         </section>
         <div class="row">
             <div class="col">
-                <h3>{{ request.user }}</h3>
+                <h3>{{ current_author }}</h3>
                 <div class="row">
-                    <h5>@{{ request.user }}</h5>
+                    <h5>@{{ current_author }}</h5>
                 </div>
                 <h6>Following: {{ number_of_following }}</h6>
                 <p>Number of tweets: {{ number_of_posts }}</p>
@@ -68,7 +68,7 @@
                         Following
                         <br>
                         {% for author in following  %}
-                        <a href="/author/{{ author }}">{{ author }}</a>
+                        <a href="/author/{{ author.id }}">{{ author }}</a>
                         <br>
                         {% endfor %}
                     </div>
