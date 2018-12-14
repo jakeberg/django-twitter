@@ -20,22 +20,18 @@
         <header>
             <h2><a href="/">Home</a></h2>
         </header>
+        User list:
         <div class="row justify-content-center">
-            <div class="card">
+            <div class="card" style="width: 100%;">
                 <div class="card-body">
                     <ul class="list-group">
-                        {% for item in tweets %}
+                        {% for author in authors %}
                         <li style="list-style-type: none">
                             <div class="card" style="width: 100%;">
                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="/">{{ item.author }}</a>
-                                        <span style="font-size: .8rem">@{{ item.author }} - {{ item.date }}</span>
-                                    </h5>
-                                    <a href="/post/{{ item.id }}">
-                                        <p class="card-text">{{ item.body }}</p>
+                                    <a href="/author/{{ author.id }}">
+                                        <p class="card-text">{{ author.name }}</p>
                                     </a>
-                                    <a href="#" class="card-link">Show this thread</a>
                                 </div>
                             </div>
                         </li>

@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 from djangotwitter.views_folder import (
-    auth, homepage, post, user_page, tweet, notification, error)
+    auth, homepage, post, user_page, tweet, notification, error, user_list)
 from djangotwitter.models import TwitterUser, Tweet, Notification
 admin.site.register(TwitterUser)
 admin.site.register(Tweet)
@@ -31,6 +31,7 @@ urlpatterns = [
     path('signup/', auth.signup_view),
     path('logout/', auth.logout_view),
     path('post/', post.post_view),
+    path('user_list/', user_list.user_list_view),
     path('author/<int:user_id>/', user_page.user_page_view),
     path('post/<int:id>/', tweet.tweet_view),
     path('delete/<int:id>/', tweet.delete_tweet_view),
